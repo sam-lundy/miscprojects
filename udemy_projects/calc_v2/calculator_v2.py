@@ -13,12 +13,19 @@ def multiply(n1, n2):
 def divide(n1, n2):
     return n1 / n2
 
+def exponent(n1, n2):
+    return n1 ** n2
+
+def remainder(n1, n2):
+    return n1 % n2
 
 symbols = {
     "+": add,
     "-": subtract,
     "*": multiply,
-    "/": divide
+    "/": divide,
+    "**": exponent,
+    "%": remainder
 }
 
 
@@ -27,50 +34,46 @@ def symbol_printing():
         print(symbol, end=' ')
 
 
-def __main__():
-    num1 = input("Enter the first number: ")
-    if num1.isdigit():
-        num1 = float(num1)
-    else:
-        print("Please enter a valid number.")
-
-    should_continue = True
-
-    while should_continue:
-
-        while True:
-            symbol_printing()
-            oper = input("\nPick an operation: ")
-            
-            if oper not in symbols:
-                print("Please enter a valid operator: \n")
-                symbol_printing()
-                break
-
-            num2 = input("Enter the second number: ")
-            if num2.isdigit():
-                num2 = float(num2)
-            else:
-                print("Please enter a valid number: ")
-                break
-
-            calculation_func = symbols[oper]
-            answer = calculation_func(num1, num2)
-            print(f"{num1} {oper} {num2} = {answer}")
-            keep_going = input("Would you like to perform another calculation with this result? (type y or n): ").lower()
-            if keep_going == "n":
-                terminate = input("Start a new calculation? (y or q to quit): ").lower()
-                if terminate == "q":
-                    should_continue = False
-                    sys.exit()
-                elif terminate == "y":
-                    __init__()
-            elif keep_going == "y":
-                num1 = answer
-
-
-def __init__():
+def calc():
     print(logo)
-    __main__()
+    num1 = float(input("Enter the first number: "))
+    print()
 
-__init__()
+    while True:
+        try:
+            symbol_printing()
+            print("\n")
+            oper = input("Pick an operation: \n")
+            
+            if oper in symbols:
+                break
+            else:
+                print("Not an accepted operator.\n")
+
+        except KeyError:
+            print("Invalid Input")
+
+#Entering a non number made program crash, add another try/except block?
+    while True:
+        num2 = float(input("Enter the second number: "))
+
+        if oper == "/" and num2 == 0:
+            print("You can't divide by zero!!")
+            calc()
+
+        calculation_func = symbols[oper]
+        answer = calculation_func(num1, num2)
+        print(f"{num1} {oper} {num2} = {answer}")
+
+        keep_going = input("Would you like to perform another calculation with this result? (type y or n): ").lower()
+        if keep_going == "n":
+            terminate = input("Start a new calculation? (y or q to quit): ").lower()
+            if terminate == "q":
+                sys.exit()
+            elif terminate == "y":
+                calc()
+        elif keep_going == "y":
+            num1 = answer
+
+
+calc()
